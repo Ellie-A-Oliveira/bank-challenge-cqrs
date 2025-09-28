@@ -1,5 +1,8 @@
 package com.desafio.bank.infrastructure.config;
 
+import com.desafio.bank.application.usecase.account.GetAccountByLoginName;
+import com.desafio.bank.domain.entity.view.AccountView;
+import com.desafio.bank.domain.exception.AccountViewNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +25,7 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtConfiguration jwtConfiguration;
+    private final GetAccountByLoginName getAccountByLoginName;
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getRequestURI().startsWith("/auth/login")) {
@@ -32,7 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getTokenFromRequest(request);
         if (token != null && jwtTokenUtil.validateToken(token)) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
-            AccountSummary user = getStaffMemberByEmail.execute(username);
+            AccountView user = getAccountByLoginName.execute(username)
+                    .orElseThrow(() -> new AccountViewNotFoundException("Account not found with username " + username));
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     user, null, getGrantedAuthoritiesFromUser(user)
@@ -55,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromUser(AccountSummary user) {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+    private Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromUser(AccountView user) {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }
