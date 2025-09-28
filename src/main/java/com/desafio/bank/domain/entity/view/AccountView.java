@@ -31,6 +31,7 @@ public class AccountView implements Serializable {
     private String document;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String loginName;
 
     @Column(nullable = false)
