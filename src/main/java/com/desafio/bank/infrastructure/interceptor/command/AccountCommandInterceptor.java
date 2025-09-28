@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ import java.util.function.BiFunction;
 @RequiredArgsConstructor
 public class AccountCommandInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
     private final PasswordEncoder passwordEncoder;
+    private final Logger logger = LoggerFactory.getLogger(AccountCommandInterceptor.class);
 
     @Nonnull
     @Override
@@ -31,7 +34,7 @@ public class AccountCommandInterceptor implements MessageDispatchInterceptor<Com
                         passwordEncoder.encode(cmd.password())
                 );
 
-                System.out.println(commandWithEncodedPassword);
+                logger.warn(String.valueOf(commandWithEncodedPassword));
 
                 return GenericCommandMessage.asCommandMessage(commandWithEncodedPassword);
             }

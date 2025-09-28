@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -48,8 +50,8 @@ public class AuthController {
                 request.password()
         );
 
-        AccountView accountView = commandGateway.sendAndWait(command);
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountView.getAccountId().toString());
+        UUID accountId = commandGateway.sendAndWait(command);
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountId.toString());
     }
 
     @PostMapping("/login")

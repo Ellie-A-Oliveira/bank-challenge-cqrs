@@ -19,7 +19,7 @@ public class AccountQueryHandler {
 
     @QueryHandler
     public AccountView handle(GetAccountByIdQuery query) {
-        AccountView accountView = redisTemplate.opsForValue().get(query.accountId());
+        AccountView accountView = redisTemplate.opsForValue().get(query.accountId().toString());
 
         if (accountView == null) {
             return getAccountById.execute(query.accountId())

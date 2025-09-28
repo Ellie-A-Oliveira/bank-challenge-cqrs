@@ -28,7 +28,7 @@ public class TransactionQueryHandler {
 
     @QueryHandler
     public TransactionView handle(GetTransactionByIdQuery query) {
-        TransactionView transactionView = redisTemplate.opsForValue().get(query.transactionId());
+        TransactionView transactionView = redisTemplate.opsForValue().get(query.transactionId().toString());
 
         if (transactionView == null) {
             return getTransactionById.execute(query.transactionId())
@@ -42,7 +42,7 @@ public class TransactionQueryHandler {
     public List<TransactionView> handle(GetTransactionsByAccountIdQuery query) {
         List<TransactionView> transactionViews = redisTemplate
                 .opsForList()
-                .range("account-transactions:" + query.accountId(),0, -1);
+                .range("account-transactions:" + query.accountId().toString(),0, -1);
 
         if (transactionViews != null && transactionViews.isEmpty()) {
             return getTransactionsByAccountId.execute(query.accountId());

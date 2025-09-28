@@ -29,9 +29,9 @@ public class JwtTokenUtil {
         if (token == null) return false;
 
         Claims claims = Jwts.parser()
-                .decryptWith(getSecretKey())
+                .setSigningKey(getSecretKey())
                 .build()
-                .parseSignedClaims(token)
+                .parseClaimsJws(token)
                 .getPayload();
         boolean isSubValid = claims.getSubject().equals(username);
         boolean isExpValid = claims.getExpiration().after(new Date());
@@ -43,9 +43,9 @@ public class JwtTokenUtil {
         if (token == null) return null;
 
         Claims claims = Jwts.parser()
-                .decryptWith(getSecretKey())
+                .setSigningKey(getSecretKey())
                 .build()
-                .parseSignedClaims(token)
+                .parseClaimsJws(token)
                 .getPayload();
 
         return claims.getSubject();
