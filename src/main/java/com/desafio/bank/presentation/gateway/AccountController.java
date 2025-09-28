@@ -6,9 +6,9 @@ import com.desafio.bank.domain.query.account.GetAccountByIdQuery;
 import com.desafio.bank.presentation.gateway.dto.request.CreateAccountRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.queryhandling.QueryGateway;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,10 +39,10 @@ public class AccountController {
                 request.fullName(),
                 request.document(),
                 request.loginName(),
-                request.passwordHash()
+                request.password()
         );
 
         AccountView accountView = commandGateway.sendAndWait(command);
-        return ResponseEntity.status(201).body(accountView.getAccountId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountView.getAccountId());
     }
 }

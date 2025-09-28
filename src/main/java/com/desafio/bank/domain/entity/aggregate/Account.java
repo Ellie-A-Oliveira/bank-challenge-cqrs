@@ -8,11 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateMember;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
@@ -40,7 +39,7 @@ public class Account {
                 cmd.fullName(),
                 cmd.document(),
                 cmd.loginName(),
-                cmd.passwordHash(),
+                cmd.password(),
                 initialAmount
         ));
     }

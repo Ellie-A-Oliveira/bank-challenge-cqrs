@@ -19,13 +19,13 @@ public class JwtTokenUtil {
     public String generateToken(String username) {
         return Jwts.builder()
                 .claim("sub", username)
-                .claim("iat", Instant.now())
-                .claim("exp", Instant.now().plusMillis(jwtConfiguration.getExpirationTime()))
+                .claim("iat", Date.from(Instant.now()))
+                .claim("exp", Date.from(Instant.now().plusMillis(jwtConfiguration.getExpirationTime())))
                 .signWith(getSecretKey())
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, String username) {
         if (token == null) return false;
 
         Claims claims = Jwts.parser()
@@ -33,7 +33,7 @@ public class JwtTokenUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        boolean isSubValid = claims.getSubject() != null;
+        boolean isSubValid = claims.getSubject().equals(username);
         boolean isExpValid = claims.getExpiration().after(new Date());
 
         return isSubValid && isExpValid;

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,6 @@ public class TransactionController {
         TransactionView transactionView = commandGateway
                 .sendAndWait(command);
 
-        return ResponseEntity.status(201).body(transactionView.getTransactionId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(transactionView.getTransactionId());
     }
 }

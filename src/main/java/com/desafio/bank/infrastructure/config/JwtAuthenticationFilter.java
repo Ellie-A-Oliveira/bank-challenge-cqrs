@@ -1,6 +1,7 @@
 package com.desafio.bank.infrastructure.config;
 
 import com.desafio.bank.application.usecase.account.GetAccountByLoginName;
+import com.desafio.bank.application.usecase.account.LoadUserByUsername;
 import com.desafio.bank.domain.entity.view.AccountView;
 import com.desafio.bank.domain.exception.AccountViewNotFoundException;
 import jakarta.servlet.FilterChain;
@@ -13,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,22 +28,36 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtConfiguration jwtConfiguration;
-    private final GetAccountByLoginName getAccountByLoginName;
+    private final LoadUserByUsername loadUserByUsername;
 
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/auth/login")) {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+        if (request.getRequestURI().startsWith("/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = getTokenFromRequest(request);
-        if (token != null && jwtTokenUtil.validateToken(token)) {
-            String username = jwtTokenUtil.getUsernameFromToken(token);
-            AccountView user = getAccountByLoginName.execute(username)
-                    .orElseThrow(() -> new AccountViewNotFoundException("Account not found with username " + username));
+        if (token == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+
+        if (username != null
+                && SecurityContextHolder.getContext().getAuthentication() == null
+                && jwtTokenUtil.validateToken(token, username)) {
+            UserDetails user = loadUserByUsername.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    user, null, getGrantedAuthoritiesFromUser(user)
+                    user, null, user.getAuthorities()
+            );
+            authenticationToken.setDetails(
+                    new WebAuthenticationDetailsSource()
+                            .buildDetails(request)
             );
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -58,9 +75,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         return null;
-    }
-
-    private Collection<? extends GrantedAuthority> getGrantedAuthoritiesFromUser(AccountView user) {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }
