@@ -4,8 +4,14 @@ import com.desafio.bank.application.usecase.account.GetAccountByLoginName;
 import com.desafio.bank.domain.entity.view.AccountView;
 import com.desafio.bank.infrastructure.repository.AccountViewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,5 +22,28 @@ public class GetAccountByLoginNameImpl implements GetAccountByLoginName {
     @Override
     public Optional<AccountView> execute(String loginName) {
         return repository.findByLoginName(loginName);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AccountView accountView = execute(username).get();
+        return new UserDetails(
+
+        ) {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            }
+
+            @Override
+            public String getPassword() {
+                return accountView.getPasswordHash();
+            }
+
+            @Override
+            public String getUsername() {
+                return accountView.getLoginName();
+            }
+        };
     }
 }

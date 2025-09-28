@@ -1,11 +1,12 @@
 package com.desafio.bank.application.usecase.account;
 
 import com.desafio.bank.domain.entity.view.AccountView;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public interface GetAccountByLoginName {
+public interface GetAccountByLoginName extends UserDetailsService {
     Optional<AccountView> execute(String loginName);
 }
