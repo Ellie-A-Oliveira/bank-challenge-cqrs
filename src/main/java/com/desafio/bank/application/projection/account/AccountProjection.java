@@ -33,7 +33,7 @@ public class AccountProjection {
                 .build();
 
         createAccountView.execute(accountView);
-        redisTemplate.opsForValue().set("account:" + evt.accountId(), accountView);
+        redisTemplate.opsForValue().set("account:" + evt.accountId().toString(), accountView);
     }
 
     @EventHandler
@@ -43,6 +43,6 @@ public class AccountProjection {
 
         existingAccount.setBalance(evt.balance());
         updateAccountView.execute(existingAccount);
-        redisTemplate.opsForValue().set("account:" + evt.accountId(), existingAccount);
+        redisTemplate.opsForValue().set("account:" + evt.accountId().toString(), existingAccount);
     }
 }

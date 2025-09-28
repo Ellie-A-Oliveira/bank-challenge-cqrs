@@ -35,7 +35,7 @@ public class TransactionProjection {
                 .build();
 
         createTransactionView.execute(transactionView);
-        redisTemplate.opsForValue().set("transaction:" + evt.transactionId(), transactionView);
-        redisTemplate.opsForList().rightPush("account-transactions:" + evt.accountId(), transactionView);
+        redisTemplate.opsForValue().set("transaction:" + evt.transactionId().toString(), transactionView);
+        redisTemplate.opsForList().rightPush("account:" + evt.accountId().toString() + ":transactions", transactionView);
     }
 }
