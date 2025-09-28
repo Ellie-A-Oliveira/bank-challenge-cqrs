@@ -16,6 +16,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+axon:
+  axonserver:
+    servers: localhost:8124
+    enabled: true
+    start-embedded: true
 jwt:
   secret: 301ca77a-654e-426a-8028-b8d7f735b7a6
   expirationTime: 3600000
