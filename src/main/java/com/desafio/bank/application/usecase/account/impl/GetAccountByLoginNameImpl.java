@@ -23,27 +23,4 @@ public class GetAccountByLoginNameImpl implements GetAccountByLoginName {
     public Optional<AccountView> execute(String loginName) {
         return repository.findByLoginName(loginName);
     }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AccountView accountView = execute(username).get();
-        return new UserDetails(
-
-        ) {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-            }
-
-            @Override
-            public String getPassword() {
-                return accountView.getPasswordHash();
-            }
-
-            @Override
-            public String getUsername() {
-                return accountView.getLoginName();
-            }
-        };
-    }
 }

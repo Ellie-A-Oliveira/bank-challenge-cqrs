@@ -1,6 +1,7 @@
 package com.desafio.bank.infrastructure.config;
 
 import com.desafio.bank.application.usecase.account.GetAccountByLoginName;
+import com.desafio.bank.application.usecase.account.LoadUserByUsername;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SpringSecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final GetAccountByLoginName getAccountByLoginName;
+    private final LoadUserByUsername loadUserByUsername;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,7 +43,7 @@ public class SpringSecurityConfiguration {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(getAccountByLoginName);
+        authProvider.setUserDetailsService(loadUserByUsername);
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
