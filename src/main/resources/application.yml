@@ -1,6 +1,9 @@
 server:
   port: 8080
+
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
     name: bank
   datasource:
@@ -16,12 +19,18 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
 axon:
   axonserver:
-    servers: localhost:8124
-    enabled: true
-    start-embedded: true
+    servers: ${AXON_SERVER_URL:localhost}
+    context: default
+
+redis:
+  host: ${SPRING_REDIS_HOST:localhost}
+  port: ${SPRING_REDIS_PORT:6379}
+
 jwt:
   secret: 301ca77a-654e-426a-8028-b8d7f735b7a6
   expirationTime: 3600000
+
 clientorigin: http://localhost:4200

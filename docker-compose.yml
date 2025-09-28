@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  axon-server:
+    image: axoniq/axonserver
+    container_name: axon-server
+    hostname: axon-server
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+      - "8224:8224"
+    volumes:
+      - axonserver-data:/data
+      - axonserver-events:/eventdata
+      - axonserver-config:/config:ro
+    environment:
+      - AXONIQ_RECOVERY=true
+      - AXONIQ_AXONSERVER_STANDALONE=true
+    networks:
+      - axon-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - axon-network
+
+  spring-app:
+    build: .
+    container_name: spring-boot-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - AXON_SERVER_URL=axon-server
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+    depends_on:
+      - axon-server
+      - redis
+    networks:
+      - axon-network
+
+volumes:
+  axonserver-data:
+  axonserver-events:
+  axonserver-config:
+
+networks:
+  axon-network:
+    driver: bridge
