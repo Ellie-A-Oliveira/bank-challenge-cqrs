@@ -1,5 +1,6 @@
 package com.desafio.bank.application.usecase.transaction.impl;
 
+import com.desafio.bank.application.usecase.account.UpdateAccountView;
 import com.desafio.bank.application.usecase.transaction.CreateTransactionView;
 import com.desafio.bank.domain.entity.view.TransactionView;
 import com.desafio.bank.infrastructure.repository.TransactionViewRepository;

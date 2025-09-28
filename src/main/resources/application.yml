@@ -19,6 +19,7 @@ spring:
     redis:
       host: ${SPRING_REDIS_HOST:localhost}
       port: ${SPRING_REDIS_PORT:6379}
+      ttl-minutes: 60
   jpa:
     hibernate:
       ddl-auto: update

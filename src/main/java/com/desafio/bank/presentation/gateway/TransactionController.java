@@ -44,9 +44,9 @@ public class TransactionController {
                 request.accountId()
         );
 
-        TransactionView transactionView = commandGateway
+        UUID transactionId = commandGateway
                 .sendAndWait(command);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(transactionView.getTransactionId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(transactionId);
     }
 }

@@ -2,12 +2,16 @@ package com.desafio.bank.domain.entity.view;
 
 import com.desafio.bank.domain.entity.aggregate.Account;
 import com.desafio.bank.domain.entity.aggregate.enumeration.TransactionType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
@@ -17,7 +21,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionView {
+public class TransactionView implements Serializable {
     @Id
     private UUID transactionId;
 
@@ -32,5 +36,7 @@ public class TransactionView {
     private TransactionType transactionType;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonSerialize
+    @JsonBackReference
     private AccountView account;
 }
