@@ -31,6 +31,6 @@ public class TransactionView {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private AccountView account;
 }

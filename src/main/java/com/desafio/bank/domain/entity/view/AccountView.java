@@ -1,9 +1,7 @@
 package com.desafio.bank.domain.entity.view;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,11 +30,12 @@ public class AccountView {
     private String loginName;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String passwordHash;
 
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<TransactionView> transactionsList;
 }
