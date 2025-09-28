@@ -34,7 +34,7 @@ public class AccountView {
     private String passwordHash;
 
     @Column(nullable = false)
-    private BigDecimal amount;
+    private BigDecimal balance;
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<TransactionView> transactionsList;

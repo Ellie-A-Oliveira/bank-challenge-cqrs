@@ -9,5 +9,5 @@ public record AccountCreatedEvent(
         String document,
         String loginName,
         String passwordHash,
-        BigDecimal amount
+        BigDecimal balance
 ) { }

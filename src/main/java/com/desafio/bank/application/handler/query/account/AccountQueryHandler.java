@@ -1,4 +1,4 @@
-package com.desafio.bank.application.handler.account;
+package com.desafio.bank.application.handler.query.account;
 
 import com.desafio.bank.application.usecase.account.GetAccountById;
 import com.desafio.bank.domain.entity.view.AccountView;

@@ -1,4 +1,4 @@
-package com.desafio.bank.application.handler.transaction;
+package com.desafio.bank.application.handler.query.transaction;
 
 import com.desafio.bank.application.usecase.account.GetAccountById;
 import com.desafio.bank.application.usecase.transaction.GetTransactionById;
