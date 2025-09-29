@@ -39,7 +39,7 @@ public class Account {
                 accountId,
                 cmd.fullName(),
                 cmd.document(),
-                cmd.loginName(),
+                cmd.document(),
                 cmd.password(),
                 initialBalance
         ));

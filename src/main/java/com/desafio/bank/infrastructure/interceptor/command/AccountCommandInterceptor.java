@@ -33,7 +33,6 @@ public class AccountCommandInterceptor implements MessageDispatchInterceptor<Com
                 CreateAccountCommand commandWithEncodedPassword = new CreateAccountCommand(
                         cmd.fullName(),
                         cmd.document(),
-                        cmd.loginName(),
                         passwordEncoder.encode(cmd.password())
                 );
 

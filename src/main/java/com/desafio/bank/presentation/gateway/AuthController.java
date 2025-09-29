@@ -39,14 +39,13 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(
             @Valid @RequestBody CreateAccountRequest request) {
-        if (getAccountByLoginName.execute(request.loginName()).isPresent()) {
+        if (getAccountByLoginName.execute(request.document()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
         }
 
         CreateAccountCommand command = new CreateAccountCommand(
                 request.fullName(),
                 request.document(),
-                request.loginName(),
                 request.password()
         );
 
